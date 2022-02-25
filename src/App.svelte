@@ -11,6 +11,14 @@
   //   return await response.json();
 	// })()
 
+  async function fetchDataMulti(pages){
+    let result = [];
+    for(let i = 0; i < pages.length; i++){
+      result.push(await fetchData(pages[i]));
+    }
+    return await result;
+  }
+
   async function fetchData(page){
     if(page == '' || !page){
       return '';
@@ -19,12 +27,23 @@
     return await response.json();
   }
 
+
+
+  function parseDataMulti(res){
+    let result = [];
+    for(let i = 0; i < res.length; i++){
+      result.push(parseData(res[i]));
+    }
+    return result;
+  }
+
   function parseData(res){
-    console.log(res);
     if(res == ''){
       return 'No data';
     }
     let parsed = JSON.stringify(res);
+    let title = parsed.match(/(?<=\"title\":\").*?(?=\")/);
+    console.log(parsed);
     parsed = parsed.substring(parsed.indexOf('Political groups'));
     parsed = parsed.substring(parsed.indexOf('<td'), parsed.indexOf('</td>'));
     console.log(parsed);
@@ -40,7 +59,9 @@
 
     var result = [];
 
-    parsed.indexOf('Government') > -1 ? result.push({group: 'Government', color: 'transparent'}) : '';
+    result.push({group: title, color: 'title'})
+
+    parsed.indexOf('Government') > -1 ? result.push({group: 'Government', color: 'subtitle'}) : '';
     let oppo = parsed.indexOf('Opposition');
     let conf = parsed.indexOf('Confidence and supply');
 
@@ -49,13 +70,13 @@
 
       if(oppo > -1){
         if(parsed.indexOf(groups[i]) > oppo){
-          result.push({group: 'Opposition', color: 'transparent'}); 
+          result.push({group: 'Opposition', color: 'subtitle'}); 
           oppo = -1;
         }
       }
       if(conf > -1){
         if(parsed.indexOf(groups[i]) > conf){
-          result.push({group: 'Confidence and supply', color: 'transparent'}); 
+          result.push({group: 'Confidence and supply', color: 'subtitle'}); 
           conf = -1;
         }
       }
@@ -226,34 +247,92 @@
     top: 180px;
   } */
 
+  .style-8::-webkit-scrollbar-track
+  {
+    border: 1px solid black;
+    background-color: #F5F5F5;
+  }
+
+  .style-8::-webkit-scrollbar
+  {
+    width: 10px;
+    background-color: #F5F5F5;
+  }
+
+  .style-8::-webkit-scrollbar-thumb
+  {
+    background-color: #000000;	
+  }
+
+  .exit-button{
+    position: absolute;
+    right: 0px;
+    width: 25px;
+    height: 25px;
+    text-align: left;
+    line-height: 0;
+  }
+
 </style>
 
 <body style="height: 100%; overflow: hidden;">
 
-  <div style="position: absolute; top: 100px;" hidden={selected == ''}>
-    {#await fetchData(pages[selected])}
-    <p>...waiting</p>
-  {:then data}
-    {#if data != ''}
-      {#each parseData(data) as group}
-      {#if group.color != 'transparent'}
-        <p> <span style="padding-right: 20px; margin-right: 20px; background-color: {group.color}; border: solid darkgrey 1px;"></span>  {group.group} </p> 
-      {:else}
-        <p> <b> {group.group} </b> </p>
-      {/if}
+  <div class="style-8" style="position: absolute; top: 80px; height: calc(100% - 100px); padding-right:25px; max-width: 50%; min-width:200px; overflow: auto; background-color: rgb(240,240,240,0.5);" hidden={selected == ''}>
+    <button class="exit-button" on:click={()=>{selected = ''}}>&#10006;</button>
+    {#if !Array.isArray(pages[selected])}
+      {#await fetchData(pages[selected])}
+        <p>...waiting</p>
+      {:then data}
+        {#if data != ''}
+          {#each parseData(data) as group}
+          {#if group.color == 'title'}
+            <h4> {group.group} </h4>
+          {:else if group.color == 'subtitle'}
+            <p> <b> {group.group} </b> </p>
+          {:else}
+            <p> <span style="padding-right: 20px; margin-right: 20px; background-color: {group.color}; border: solid darkgrey 1px;"></span>  {group.group} </p> 
+          {/if}
+          {/each}
+        {:else}
+          <p> No Data </p>
+        {/if}
 
-      {/each}
+        
+      {:catch error}
+        <p>{error}</p>
+      {/await}
+
     {:else}
-      <p> No Data </p>
-    {/if}
 
-    
-  {:catch error}
-    <p>{error}</p>
-  {/await}
+      {#await fetchDataMulti(pages[selected])}
+        <p>...waiting</p>
+      {:then data}
+        {#if data != ''}
+          {#each parseDataMulti(data) as chamber}
+            {#each chamber as group}
+            {#if group.color == 'title'}
+              <h4> {group.group} </h4>
+            {:else if group.color == 'subtitle'}
+              <p> <b> {group.group} </b> </p>
+            {:else}
+              <p> <span style="padding-right: 20px; margin-right: 20px; background-color: {group.color}; border: solid darkgrey 1px;"></span>  {group.group} </p> 
+            {/if}
+            {/each}
+            <hr>
+          {/each}
+        {:else}
+          <p> No Data </p>
+        {/if}
+
+        
+      {:catch error}
+        <p>{error}</p>
+      {/await}
+
+    {/if}
   </div>
 
-  <div style="width: 100%; position: absolute; background-color: rgb(255,255,255,0.8); display: flex; justify-content: space-around">
+  <div style="width: 100%; position: absolute; top: 0; left: 0; background-color: rgb(255,255,255,0.8); display: flex; justify-content: space-around; height: 80px;">
       <button class="map-button" on:click={resetMap}>Reset</button>
 
       <!-- <h4>
@@ -272,7 +351,7 @@
   
   
   <div>
-    <svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="{vbx+' '+vby+' '+vbw+' '+vbh}" on:mousedown={onMouseDown} on:mousewheel={onMouseWheel}>
+    <svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="{vbx+' '+vby+' '+vbw+' '+vbh}" on:mousedown={onMouseDown} on:mousewheel={onMouseWheel} on:mouseleave={onMouseUp}>
   
         <!-- copy map path in here -->
   
