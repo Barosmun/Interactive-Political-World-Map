@@ -44,18 +44,25 @@
     let parsed = JSON.stringify(res);
     let title = parsed.match(/(?<=\"title\":\").*?(?=\")/);
     console.log(parsed);
-    parsed = parsed.substring(parsed.indexOf('Political groups'));
-    parsed = parsed.substring(parsed.indexOf('<td'), parsed.indexOf('</td>'));
+    parsed = parsed.match(/(?<=<tr).*(political groups).*?(?=<\/tr>)/gmi);
+    parsed = parsed[0];
+    console.log('match')
+    // parsed = parsed.substring(parsed.indexOf('Political groups'));
+    // parsed = parsed.substring(parsed.indexOf('<td'), parsed.indexOf('</td>'));
     console.log(parsed);
     // parsed = parsed.match(/(?<=(<li>)).+?(?=(<\/li>))/g);
     let colors = parsed.match(/(?<=<span)(.*?)(?=<\/span>)/g);
-    colors = colors.join().match(/(?<=background-color:)(.*?)(?=;)/g);
     console.log(colors);
+    colors = colors.join().match(/(?<=background-color:)(.*?)(?=;)/g);
+    // console.log(colors);
+    colors = colors.filter(function(x) {
+        return x !== 'transparent';
+    });
     
     // let links = parsed.match(/(?<=href=\\"\/wiki\/).*?(?=\\".*?[a-zA-Z\s]+?(<\/a>)*\s\(\d*?\)(?!<\/b>))/gm);
     // console.log(links);
     // let groups = parsed.match(/[a-zA-Z\s]+?(<\/a>)*\s\(\d*?\)(?!<\/b>)/gm);
-    let groups = parsed.match(/[a-zA-Z\s]+?(<\/a>)*\s\((<a.*?>)*\d*?\)(?!<\/b>)/gm);
+    let groups = parsed.match(/[a-zA-Z\d\s]+?(<\/a>)*\s\((<a.*?>)*\d*?\)(?!<\/b>)/gm);
     console.log(groups);
 
     var result = [];
@@ -379,7 +386,7 @@
       
       <h4>selected: {selected ? countries[selected] : ''}</h4> -->
 
-      <h1> selected: {selected ? countries[selected] + ' | ' + countries_no[selected]: ''}</h1>
+      <h1> selected: {selected ? countries[selected] : ''}</h1>
   </div>
   
   <!-- <button class="zoomButton" on:click={zoomIn} disabled={vbw <= 250}>+</button>
