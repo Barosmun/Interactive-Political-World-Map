@@ -10,9 +10,9 @@ let pages = {
     AI: 'House_of_Assembly_(Anguilla)',
     AQ: '',
     AG: ['Senate_(Antigua_and_Barbuda)','House_of_Representatives_(Antigua_and_Barbuda)'], //TODO (throws .length error)
-    AR: '',
-    AM: '',
-    AW: '',
+    AR: ['Argentine_Senate','Argentine_Chamber_of_Deputies'],
+    AM: 'National_Assembly_(Armenia)',
+    AW: 'Parliament_of_Aruba',
     AU: 'Australian_House_of_Representatives',
     AT: '',
     AZ: '',

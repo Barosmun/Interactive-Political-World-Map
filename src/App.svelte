@@ -54,41 +54,77 @@
     
     // let links = parsed.match(/(?<=href=\\"\/wiki\/).*?(?=\\".*?[a-zA-Z\s]+?(<\/a>)*\s\(\d*?\)(?!<\/b>))/gm);
     // console.log(links);
-    let groups = parsed.match(/[a-zA-Z\s]+?(<\/a>)*\s\(\d*?\)(?!<\/b>)/gm);
+    // let groups = parsed.match(/[a-zA-Z\s]+?(<\/a>)*\s\(\d*?\)(?!<\/b>)/gm);
+    let groups = parsed.match(/[a-zA-Z\s]+?(<\/a>)*\s\((<a.*?>)*\d*?\)(?!<\/b>)/gm);
     console.log(groups);
 
     var result = [];
 
     result.push({group: title, color: 'title'})
 
-    parsed.indexOf('Government') > -1 ? result.push({group: 'Government', color: 'subtitle'}) : '';
-    let oppo = parsed.indexOf('Opposition');
-    let conf = parsed.indexOf('Confidence and supply');
-
-
-    for(let i = 0; i < groups.length; i++){
-
-      if(oppo > -1){
-        if(parsed.indexOf(groups[i]) > oppo){
-          result.push({group: 'Opposition', color: 'subtitle'}); 
-          oppo = -1;
+    //----------------------------------
+    //      Unusual Groups
+    //----------------------------------
+    if(!groups){
+      groups = parsed.match(/\(\d*?\)(?!<\/b>)/gm);
+      let sections = parsed.match(/(?<=<b>)([a-zA-Z\s]*?)(?=<\/b>)/gm);
+      console.log(groups);
+      console.log(sections);
+      for(let i = 0; i < groups.length; i++){
+        groups[i] = groups[i].replace(/(<a.*?>)*/, "");
+        groups[i] = groups[i].replaceAll("</a>", "");
+        result.push({group: sections[i] + ' ' + groups[i], color: colors[i]});
         }
-      }
-      if(conf > -1){
-        if(parsed.indexOf(groups[i]) > conf){
-          result.push({group: 'Confidence and supply', color: 'subtitle'}); 
-          conf = -1;
-        }
-      }
 
-
-      groups[i] = groups[i].replace("</a>", "");
-      colors[i] = colors[i].replace("background-color:", "");
-      result.push({group: groups[i], color: colors[i]});
+      return result;
     }
+    //----------------------------------
+    //      Usual Groups 
+    //----------------------------------
+    else {
+
+      parsed.indexOf('Government') > -1 ? result.push({group: 'Government', color: 'subtitle'}) : '';
+      let oppo = parsed.indexOf('Opposition');
+      let inde = parsed.indexOf('Independents');
+      let conf = parsed.indexOf('Confidence and supply');
 
 
-    return result;
+      for(let i = 0; i < groups.length; i++){
+
+        if(oppo > -1){
+          if(parsed.indexOf(groups[i]) > oppo){
+            result.push({group: 'Opposition', color: 'subtitle'}); 
+            oppo = -1;
+          }
+        }
+        if(inde > -1){
+          if(parsed.indexOf(groups[i]) == inde){
+            inde = -1;
+          }
+          else if(parsed.indexOf(groups[i]) > inde){
+            result.push({group: 'Independents', color: 'subtitle'}); 
+            inde = -1;
+          }
+        }
+        if(conf > -1){
+          if(parsed.indexOf(groups[i]) > conf){
+            result.push({group: 'Confidence and supply', color: 'subtitle'}); 
+            conf = -1;
+          }
+        }
+
+        groups[i] = groups[i].replace(/(<a.*?>)*/g, "");
+        console.log(groups[i]);
+        groups[i] = groups[i].replaceAll("</a>", "");
+        console.log(groups[i]);
+
+        result.push({group: groups[i], color: colors[i]});
+      }
+
+
+      return result;
+    }
+    
   }
 
 
