@@ -33,6 +33,7 @@
     let result = [];
     for(let i = 0; i < res.length; i++){
       result.push(parseData(res[i]));
+      console.log('\n--\n');
     }
     return result;
   }
@@ -46,90 +47,159 @@
     console.log(parsed);
     parsed = parsed.match(/(?<=<tr).*(political groups).*?(?=<\/tr>)/gmi);
     parsed = parsed[0];
-    console.log('match')
     // parsed = parsed.substring(parsed.indexOf('Political groups'));
     // parsed = parsed.substring(parsed.indexOf('<td'), parsed.indexOf('</td>'));
     console.log(parsed);
     // parsed = parsed.match(/(?<=(<li>)).+?(?=(<\/li>))/g);
-    let colors = parsed.match(/(?<=<span)(.*?)(?=<\/span>)/g);
-    console.log(colors);
-    colors = colors.join().match(/(?<=background-color:)(.*?)(?=;)/g);
-    // console.log(colors);
-    colors = colors.filter(function(x) {
-        return x !== 'transparent';
-    });
     
     // let links = parsed.match(/(?<=href=\\"\/wiki\/).*?(?=\\".*?[a-zA-Z\s]+?(<\/a>)*\s\(\d*?\)(?!<\/b>))/gm);
     // console.log(links);
     // let groups = parsed.match(/[a-zA-Z\s]+?(<\/a>)*\s\(\d*?\)(?!<\/b>)/gm);
-    let groups = parsed.match(/[a-zA-Z\d\s]+?(<\/a>)*\s\((<a.*?>)*\d*?\)(?!<\/b>)/gm);
+
+    let groups = parsed.match(/(?<=<ul).*?(?=<\/ul>)/gm);-
+
     console.log(groups);
 
     var result = [];
 
     result.push({group: title, color: 'title'})
 
-    //----------------------------------
-    //      Unusual Groups
-    //----------------------------------
     if(!groups){
-      groups = parsed.match(/\(\d*?\)(?!<\/b>)/gm);
-      let sections = parsed.match(/(?<=<b>)([a-zA-Z\s]*?)(?=<\/b>)/gm);
-      console.log(groups);
-      console.log(sections);
+      console.log('No <ul> - Australia');
+      //--------------------------------------------
+      //      No <ul> - Australia
+      //--------------------------------------------
+      parsed = parsed.substring(parsed.indexOf('groups'));
+      let subtitles = parsed.match(/(?<=<b>).*?(?=<\/b>)/g);
+      console.log(subtitles);
+
+      let subtitleIndexes = [];
+      var re = /(?<=<b>).*?(?=<\/b>)/g
+      let match;
+      while((match = re.exec(parsed)) != null){
+        subtitleIndexes.push(match.index);
+      }
+      console.log(subtitleIndexes);
+      subtitles = subtitles.join().match(/[^>]+(?![^<]*\>)/g);
+      console.log(subtitles);
+      let arr = [];
+      for(let i = 0; i < subtitles.length; i++){
+        subtitles[i] = subtitles[i].replace(/ *\([^)]*\) */g, "");
+        subtitles[i] = subtitles[i].replace(/,/g, "");
+        let temp = subtitles[i].match(/.*[a-zA-Z]+.*/);
+        console.log(temp);
+        temp != null ? arr.push(subtitles[i]) : '';
+      }
+      subtitles = arr;
+
+      groups = parsed.match(/[a-zA-Z\d\s]+?(<\/a>)*\s\((<a.*?>)*\d*?\)(?!<\/b>)/gm);
+      let colors = parsed.match(/(?<=<span)(.*?)(?=<\/span>)/g);
+      console.log(colors);
+      colors = colors.join().match(/(?<=background-color:)(.*?)(?=;)/g);
+      // console.log(colors);
+      colors = colors.filter(function(x) {
+          return x !== 'transparent';
+      });
+
+        
+
+
       for(let i = 0; i < groups.length; i++){
-        groups[i] = groups[i].replace(/(<a.*?>)*/, "");
-        groups[i] = groups[i].replaceAll("</a>", "");
-        result.push({group: sections[i] + ' ' + groups[i], color: colors[i]});
-        }
 
-      return result;
-    }
-    //----------------------------------
-    //      Usual Groups 
-    //----------------------------------
-    else {
-
-      parsed.indexOf('Government') > -1 ? result.push({group: 'Government', color: 'subtitle'}) : '';
-      let oppo = parsed.indexOf('Opposition');
-      let inde = parsed.indexOf('Independents');
-      let conf = parsed.indexOf('Confidence and supply');
-
-
-      for(let i = 0; i < groups.length; i++){
-
-        if(oppo > -1){
-          if(parsed.indexOf(groups[i]) > oppo){
-            result.push({group: 'Opposition', color: 'subtitle'}); 
-            oppo = -1;
-          }
-        }
-        if(inde > -1){
-          if(parsed.indexOf(groups[i]) == inde){
-            inde = -1;
-          }
-          else if(parsed.indexOf(groups[i]) > inde){
-            result.push({group: 'Independents', color: 'subtitle'}); 
-            inde = -1;
-          }
-        }
-        if(conf > -1){
-          if(parsed.indexOf(groups[i]) > conf){
-            result.push({group: 'Confidence and supply', color: 'subtitle'}); 
-            conf = -1;
+        for(let j = 0; j < subtitles.length; j++){
+          if(subtitleIndexes[j] > -1){
+            if(parsed.indexOf(groups[i]) > subtitleIndexes[j]){
+              result.push({group: subtitles[j], color: 'subtitle'}); 
+              subtitleIndexes[j] = -1;
+            }
           }
         }
 
         groups[i] = groups[i].replace(/(<a.*?>)*/g, "");
-        console.log(groups[i]);
         groups[i] = groups[i].replaceAll("</a>", "");
-        console.log(groups[i]);
 
         result.push({group: groups[i], color: colors[i]});
       }
-
-
       return result;
+    }
+    else {
+
+      if(false && groups.join().indexOf('<ul') > -1){
+        console.log(' Nested <ul> Groups');
+
+        //----------------------------------
+        //      Nested <ul> Groups 
+        //----------------------------------
+
+        //TODO
+      }
+      else{
+        console.log('Usual Groups');
+
+        //----------------------------------
+        //      Usual Groups 
+        //----------------------------------
+        // console.log('SUBTITLES');
+
+        parsed = parsed.substring(parsed.indexOf('groups'));
+        let subtitles = parsed.match(/(?<=<b>).*?(?=<\/b>)/g);
+        console.log(subtitles);
+
+        let subtitleIndexes = [];
+        var re = /(?<=<b>).*?(?=<\/b>)/g
+        let match;
+        while((match = re.exec(parsed)) != null){
+          subtitleIndexes.push(match.index);
+        }
+        console.log(subtitleIndexes);
+        subtitles = subtitles.join().match(/[^>]+(?![^<]*\>)/g);
+        console.log(subtitles);
+        let arr = [];
+        for(let i = 0; i < subtitles.length; i++){
+          subtitles[i] = subtitles[i].replace(/ *\([^)]*\) */g, "");
+          subtitles[i] = subtitles[i].replace(/,/g, "");
+          let temp = subtitles[i].match(/.*[a-zA-Z]+.*/);
+          console.log(temp);
+          temp != null ? arr.push(subtitles[i]) : '';
+        }
+        subtitles = arr;
+
+        groups = groups.join().match(/(?<=<li).*?(?=<\/li>)/gm);
+
+        for(let i = 0; i < groups.length; i++){
+          groups[i] = groups[i].match(/(?<=<span).*/);
+        }
+        let colors = groups.join().match(/(?<=background-color:).*?(?=;)/g);
+        console.log(groups.join());
+        
+        groups = groups.join().match(/[^<>]+?(<\/a>)*\s\((<a.*?>)*\d*?\)(?!<\/b>)/gm);
+
+        console.log(colors);
+        console.log(groups);
+
+
+        for(let i = 0; i < groups.length; i++){
+
+        for(let j = 0; j < subtitles.length; j++){
+          if(subtitleIndexes[j] > -1){
+            if(parsed.indexOf(groups[i]) > subtitleIndexes[j]){
+              result.push({group: subtitles[j], color: 'subtitle'}); 
+              subtitleIndexes[j] = -1;
+            }
+          }
+        }
+
+          groups[i] = groups[i].replace(/(<a.*?>)*/g, "");
+          groups[i] = groups[i].replaceAll("</a>", "");
+
+          result.push({group: groups[i], color: colors[i]});
+        }
+
+
+        return result;
+      }
+
+      
     }
     
   }
