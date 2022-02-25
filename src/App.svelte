@@ -33,15 +33,34 @@
     colors = colors.join().match(/(?<=background-color:)(.*?)(?=;)/g);
     console.log(colors);
     
+    // let links = parsed.match(/(?<=href=\\"\/wiki\/).*?(?=\\".*?[a-zA-Z\s]+?(<\/a>)*\s\(\d*?\)(?!<\/b>))/gm);
+    // console.log(links);
     let groups = parsed.match(/[a-zA-Z\s]+?(<\/a>)*\s\(\d*?\)(?!<\/b>)/gm);
     console.log(groups);
 
-    if(parsed.indexOf('Government') > -1){
-      
-    }
-
     var result = [];
+
+    parsed.indexOf('Government') > -1 ? result.push({group: 'Government', color: 'transparent'}) : '';
+    let oppo = parsed.indexOf('Opposition');
+    let conf = parsed.indexOf('Confidence and supply');
+
+
     for(let i = 0; i < groups.length; i++){
+
+      if(oppo > -1){
+        if(parsed.indexOf(groups[i]) > oppo){
+          result.push({group: 'Opposition', color: 'transparent'}); 
+          oppo = -1;
+        }
+      }
+      if(conf > -1){
+        if(parsed.indexOf(groups[i]) > conf){
+          result.push({group: 'Confidence and supply', color: 'transparent'}); 
+          conf = -1;
+        }
+      }
+
+
       groups[i] = groups[i].replace("</a>", "");
       colors[i] = colors[i].replace("background-color:", "");
       result.push({group: groups[i], color: colors[i]});
@@ -217,7 +236,12 @@
   {:then data}
     {#if data != ''}
       {#each parseData(data) as group}
-      <p> <span style="padding-right: 20px; margin-right: 20px; background-color: {group.color}; border: solid darkgrey 1px;"></span> {group.group} </p>
+      {#if group.color != 'transparent'}
+        <p> <span style="padding-right: 20px; margin-right: 20px; background-color: {group.color}; border: solid darkgrey 1px;"></span>  {group.group} </p> 
+      {:else}
+        <p> <b> {group.group} </b> </p>
+      {/if}
+
       {/each}
     {:else}
       <p> No Data </p>
