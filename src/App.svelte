@@ -12,7 +12,7 @@
 	// })()
 
   async function fetchData(page){
-    if(page == ''){
+    if(page == '' || !page){
       return '';
     }
 		const response = await fetch(`https://en.wikipedia.org/w/api.php?&origin=*&action=parse&page=${page}&prop=text&format=json`, {method: "GET"})
@@ -20,16 +20,26 @@
   }
 
   function parseData(res){
+    console.log(res);
     if(res == ''){
       return 'No data';
     }
     let parsed = JSON.stringify(res);
     parsed = parsed.substring(parsed.indexOf('Political groups'));
     parsed = parsed.substring(parsed.indexOf('<td'), parsed.indexOf('</td>'));
+    console.log(parsed);
     // parsed = parsed.match(/(?<=(<li>)).+?(?=(<\/li>))/g);
-    let colors = parsed.match(/(?<=background-color:)(.*?)(?=;)/g);
+    let colors = parsed.match(/(?<=<span)(.*?)(?=<\/span>)/g);
+    colors = colors.join().match(/(?<=background-color:)(.*?)(?=;)/g);
+    console.log(colors);
     
-    let groups = parsed.match(/[a-zA-Z\s]*?<\/a>\s\(\d*?\)/gm);
+    let groups = parsed.match(/[a-zA-Z\s]+?(<\/a>)*\s\(\d*?\)(?!<\/b>)/gm);
+    console.log(groups);
+
+    if(parsed.indexOf('Government') > -1){
+      
+    }
+
     var result = [];
     for(let i = 0; i < groups.length; i++){
       groups[i] = groups[i].replace("</a>", "");
@@ -40,6 +50,7 @@
 
     return result;
   }
+
 
 
 	let name = 'World';
@@ -206,7 +217,7 @@
   {:then data}
     {#if data != ''}
       {#each parseData(data) as group}
-      <p> <span style="padding-right: 20px; margin-right: 20px; background-color: {group.color};"></span> {group.group} </p>
+      <p> <span style="padding-right: 20px; margin-right: 20px; background-color: {group.color}; border: solid darkgrey 1px;"></span> {group.group} </p>
       {/each}
     {:else}
       <p> No Data </p>
