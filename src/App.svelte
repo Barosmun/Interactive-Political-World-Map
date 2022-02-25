@@ -27,6 +27,32 @@
     return await response.json();
   }
 
+  function getSubtitles(parsed){
+    let subtitles = parsed.match(/(?<=<b>).*?(?=<\/b>)/g);
+    console.log(subtitles);
+
+    let subtitleIndexes = [];
+    var re = /(?<=<b>).*?(?=<\/b>)/g
+    let match;
+    while((match = re.exec(parsed)) != null){
+      subtitleIndexes.push(match.index);
+    }
+    console.log(subtitleIndexes);
+    let arr = [];
+    for(let i = 0; i < subtitles.length; i++){
+      console.log(subtitles[i]);
+      subtitles[i] = subtitles[i].replace(/(?<=<)(.*?)(?=>)/g, "");
+      subtitles[i] = subtitles[i].replace(/[<>]/g, "");
+      console.log(subtitles[i]);
+      subtitles[i] = subtitles[i].replace(/ *\([^)]*\) */g, "");
+      subtitles[i] = subtitles[i].replace(/,/g, "");
+      let temp = subtitles[i].match(/.*[a-zA-Z]+.*/);
+      console.log(temp);
+      temp != null ? arr.push(subtitles[i]) : '';
+    }
+    return [arr, subtitleIndexes];
+  }
+
 
 
   function parseDataMulti(res){
@@ -70,27 +96,9 @@
       //      No <ul> - Australia
       //--------------------------------------------
       parsed = parsed.substring(parsed.indexOf('groups'));
-      let subtitles = parsed.match(/(?<=<b>).*?(?=<\/b>)/g);
-      console.log(subtitles);
-
-      let subtitleIndexes = [];
-      var re = /(?<=<b>).*?(?=<\/b>)/g
-      let match;
-      while((match = re.exec(parsed)) != null){
-        subtitleIndexes.push(match.index);
-      }
-      console.log(subtitleIndexes);
-      subtitles = subtitles.join().match(/[^>]+(?![^<]*\>)/g);
-      console.log(subtitles);
-      let arr = [];
-      for(let i = 0; i < subtitles.length; i++){
-        subtitles[i] = subtitles[i].replace(/ *\([^)]*\) */g, "");
-        subtitles[i] = subtitles[i].replace(/,/g, "");
-        let temp = subtitles[i].match(/.*[a-zA-Z]+.*/);
-        console.log(temp);
-        temp != null ? arr.push(subtitles[i]) : '';
-      }
-      subtitles = arr;
+      let subTmp = getSubtitles(parsed);
+      let subtitles = subTmp[0];
+      let subtitleIndexes = subTmp[1];
 
       groups = parsed.match(/[a-zA-Z\d\s]+?(<\/a>)*\s\((<a.*?>)*\d*?\)(?!<\/b>)/gm);
       let colors = parsed.match(/(?<=<span)(.*?)(?=<\/span>)/g);
@@ -142,27 +150,9 @@
         // console.log('SUBTITLES');
 
         parsed = parsed.substring(parsed.indexOf('groups'));
-        let subtitles = parsed.match(/(?<=<b>).*?(?=<\/b>)/g);
-        console.log(subtitles);
-
-        let subtitleIndexes = [];
-        var re = /(?<=<b>).*?(?=<\/b>)/g
-        let match;
-        while((match = re.exec(parsed)) != null){
-          subtitleIndexes.push(match.index);
-        }
-        console.log(subtitleIndexes);
-        subtitles = subtitles.join().match(/[^>]+(?![^<]*\>)/g);
-        console.log(subtitles);
-        let arr = [];
-        for(let i = 0; i < subtitles.length; i++){
-          subtitles[i] = subtitles[i].replace(/ *\([^)]*\) */g, "");
-          subtitles[i] = subtitles[i].replace(/,/g, "");
-          let temp = subtitles[i].match(/.*[a-zA-Z]+.*/);
-          console.log(temp);
-          temp != null ? arr.push(subtitles[i]) : '';
-        }
-        subtitles = arr;
+        let subTmp = getSubtitles(parsed);
+        let subtitles = subTmp[0];
+        let subtitleIndexes = subTmp[1];
 
         groups = groups.join().match(/(?<=<li).*?(?=<\/li>)/gm);
 
@@ -170,6 +160,7 @@
           groups[i] = groups[i].match(/(?<=<span).*/);
         }
         let colors = groups.join().match(/(?<=background-color:).*?(?=;)/g);
+        colors = colors.filter(c => c != "transparent");
         console.log(groups.join());
         
         groups = groups.join().match(/[^<>]+?(<\/a>)*\s\((<a.*?>)*\d*?\)(?!<\/b>)/gm);
