@@ -29,28 +29,33 @@
 
   function getSubtitles(parsed){
     let subtitles = parsed.match(/(?<=<b>).*?(?=<\/b>)/g);
-    console.log(subtitles);
-
-    let subtitleIndexes = [];
-    var re = /(?<=<b>).*?(?=<\/b>)/g
-    let match;
-    while((match = re.exec(parsed)) != null){
-      subtitleIndexes.push(match.index);
-    }
-    console.log(subtitleIndexes);
-    let arr = [];
-    for(let i = 0; i < subtitles.length; i++){
-      console.log(subtitles[i]);
-      subtitles[i] = subtitles[i].replace(/(?<=<)(.*?)(?=>)/g, "");
-      subtitles[i] = subtitles[i].replace(/[<>]/g, "");
-      console.log(subtitles[i]);
-      subtitles[i] = subtitles[i].replace(/ *\([^)]*\) */g, "");
-      subtitles[i] = subtitles[i].replace(/,/g, "");
-      let temp = subtitles[i].match(/.*[a-zA-Z]+.*/);
-      console.log(temp);
-      temp != null ? arr.push(subtitles[i]) : '';
-    }
-    return [arr, subtitleIndexes];
+      if(subtitles){
+        console.log(subtitles);
+    
+        let subtitleIndexes = [];
+        var re = /(?<=<b>).*?(?=<\/b>)/g
+        let match;
+        while((match = re.exec(parsed)) != null){
+          subtitleIndexes.push(match.index);
+        }
+        console.log(subtitleIndexes);
+        let arr = [];
+        for(let i = 0; i < subtitles.length; i++){
+          console.log(subtitles[i]);
+          subtitles[i] = subtitles[i].replace(/(?<=<)(.*?)(?=>)/g, "");
+          subtitles[i] = subtitles[i].replace(/[<>]/g, "");
+          console.log(subtitles[i]);
+          subtitles[i] = subtitles[i].replace(/ *\([^)]*\) */g, "");
+          subtitles[i] = subtitles[i].replace(/,/g, "");
+          let temp = subtitles[i].match(/.*[a-zA-Z]+.*/);
+          console.log(temp);
+          temp != null ? arr.push(subtitles[i]) : '';
+        }
+        return [arr, subtitleIndexes];
+      }
+      else{
+        return [[], []];
+      }
   }
 
 
@@ -147,7 +152,6 @@
         //----------------------------------
         //      Usual Groups 
         //----------------------------------
-        // console.log('SUBTITLES');
 
         parsed = parsed.substring(parsed.indexOf('groups'));
         let subTmp = getSubtitles(parsed);
@@ -181,6 +185,7 @@
         }
 
           groups[i] = groups[i].replace(/(<a.*?>)*/g, "");
+          groups[i] = groups[i].replace(/&.*?;/g, "");
           groups[i] = groups[i].replaceAll("</a>", "");
 
           result.push({group: groups[i], color: colors[i]});
