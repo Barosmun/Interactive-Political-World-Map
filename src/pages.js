@@ -1,6 +1,6 @@
 export {pages as pages} 
 let pages = {
-    AF: '',
+    AF: '', //Taliban
     AX: 'Parliament_of_Åland',
     AL: 'Parliament_of_Albania',
     DZ: ['Council_of_the_Nation', 'People%27s_National_Assembly'],
@@ -8,37 +8,37 @@ let pages = {
     AD: 'General_Council_(Andorra)',
     AO: 'National_Assembly_(Angola)',
     AI: 'House_of_Assembly_(Anguilla)',
-    AQ: '',
-    AG: ['Senate_(Antigua_and_Barbuda)','House_of_Representatives_(Antigua_and_Barbuda)'], //TODO (throws .length error)
+    AQ: '', //Antarctica
+    AG: ['Senate_(Antigua_and_Barbuda)','House_of_Representatives_(Antigua_and_Barbuda)'],
     AR: ['Argentine_Senate','Argentine_Chamber_of_Deputies'],
     AM: 'National_Assembly_(Armenia)',
     AW: 'Parliament_of_Aruba',
     AU: ['Australian_Senate', 'Australian_House_of_Representatives'],
-    AT: '',
-    AZ: '',
-    BS: '',
-    BH: '',
-    BD: '',
-    BB: '',
-    BY: '',
-    BE: '',
-    BZ: '',
-    BJ: '',
-    BM: '',
-    BT: '',
-    BO: '',
-    BA: '',
-    BW: '',
-    BR: '',
-    IO: '',
-    VG: '',
-    BN: '',
-    BG: '',
-    BF: '',
-    BI: '',
-    KH: '',
-    CM: '',
-    CA: '',
+    AT: ['National_Council_(Austria)','Federal_Council_(Austria)'],
+    AZ: 'National_Assembly_(Azerbaijan)',
+    BS: '', //TODO - 2 chambers, 1 page
+    BH: ['Consultative_Council_(Bahrain)', 'Council_of_Representatives_(Bahrain)'],
+    BD: 'Jatiya_Sangsad',
+    BB: ['Senate_of_Barbados', 'House_of_Assembly_of_Barbados'],
+    BY: ['Council_of_the_Republic_(Belarus)', 'House_of_Representatives_(Belarus)'],
+    BE: ['Senate_(Belgium)', 'Chamber_of_Representatives_(Belgium)'],
+    BZ: ['Senate_(Belize)', 'House_of_Representatives_(Belize)'], //TODO senate throws err; groups = null
+    BJ: 'National_Assembly_(Benin)',
+    BM: ['Senate_of_Bermuda','House_of_Assembly_of_Bermuda'],
+    BT: ['National_Council_(Bhutan)','National_Assembly_(Bhutan)'], //TODO 'non-partisan' appears as 'partisan'
+    BO: ['Chamber_of_Senators_(Bolivia)','Chamber_of_Deputies_(Bolivia)'],
+    BA: ['House_of_Representatives_of_Bosnia_and_Herzegovina', 'House_of_Peoples_of_Bosnia_and_Herzegovina'], //TODO throws err; groups = null
+    BW: 'National_Assembly_(Botswana)',
+    BR: ['Federal_Senate_(Brazil)', 'Chamber_of_Deputies_(Brazil)'],
+    IO: '', //TODO ???
+    VG: '', //TODO ???
+    BN: '', //TODO weird situation over in Brunei
+    BG: 'National_Assembly_(Bulgaria)',
+    BF: 'National_Assembly_of_Burkina_Faso', //TODO throws error; parsed = null
+    BI: ['Senate_(Burundi)', 'National_Assembly_(Burundi)'], //TODO senate throws err; groups = null
+    KH: ['Senate_(Cambodia)', 'National_Assembly_(Cambodia)'], 
+    CM: ['Senate_(Cameroon)', 'National_Assembly_(Cameroon)'], //TODO throws error; parsed = null
+    CA: ['Senate_of_Canada','House_of_Commons_of_Canada'],
     CV: '',
     BQ: '',
     KY: '',
@@ -231,7 +231,7 @@ let pages = {
     UA: '',
     AE: '',
     GB: '',
-    US: '',
+    US: ['United_States_Senate','United_States_House_of_Representatives'],
     UM: '',
     VI: '',
     UY: '',

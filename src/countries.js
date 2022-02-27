@@ -32,7 +32,7 @@ let countries = {
     BR: 'Brazil',
     IO: 'British Indian Ocean Territory',
     VG: 'British Virgin Islands',
-    BN: 'Brunei Darussalam',
+    BN: 'Brunei',
     BG: 'Bulgaria',
     BF: 'Burkina Faso',
     BI: 'Burundi',
