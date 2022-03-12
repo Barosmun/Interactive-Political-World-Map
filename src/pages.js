@@ -1,6 +1,6 @@
 export {pages as pages} 
 let pages = {
-    AF: '', //Taliban
+    AF: '', //TODO - Taliban
     AX: 'Parliament_of_Åland',
     AL: 'Parliament_of_Albania',
     DZ: ['Council_of_the_Nation', 'People%27s_National_Assembly'],
@@ -8,7 +8,7 @@ let pages = {
     AD: 'General_Council_(Andorra)',
     AO: 'National_Assembly_(Angola)',
     AI: 'House_of_Assembly_(Anguilla)',
-    AQ: '', //Antarctica
+    AQ: '', //TODO - Antarctica
     AG: ['Senate_(Antigua_and_Barbuda)','House_of_Representatives_(Antigua_and_Barbuda)'],
     AR: ['Argentine_Senate','Argentine_Chamber_of_Deputies'],
     AM: 'National_Assembly_(Armenia)',
@@ -39,32 +39,32 @@ let pages = {
     KH: ['Senate_(Cambodia)', 'National_Assembly_(Cambodia)'], 
     CM: ['Senate_(Cameroon)', 'National_Assembly_(Cameroon)'], //TODO throws error; parsed = null
     CA: ['Senate_of_Canada','House_of_Commons_of_Canada'],
-    CV: '',
-    BQ: '',
-    KY: '',
-    CF: '',
-    TD: '',
-    CL: '',
-    CN: '',
-    CX: '',
-    CC: '',
-    CO: '',
-    KM: '',
-    CG: '',
-    CK: '',
-    CR: '',
-    HR: '',
-    CU: '',
-    CW: '',
-    CY: '',
-    CZ: '',
-    CD: '',
-    DK: '',
-    DJ: '',
-    DM: '',
-    DO: '',
-    EC: '',
-    EG: '',
+    CV: 'National_Assembly_(Cabo_Verde)', //TODO throws error; parsed = null
+    BQ: '', //TODO ???
+    KY: 'Parliament_of_the_Cayman_Islands', 
+    CF: 'National_Assembly_(Central_African_Republic)', //TODO there is a senate but no wiki page for it?
+    TD: '', //TODO not currently in use following a coup
+    CL: ['Senate_of_Chile', 'Chamber_of_Deputies_of_Chile'], //TODO display issues
+    CN: 'Standing_Committee_of_the_National_People%27s_Congress', //TODO special page for NPCSC and included on NPC
+    CX: '', //TODO point to Australia
+    CC: '', //TODO point to Australia
+    CO: ['Senate_of_Colombia','Chamber_of_Representatives_of_Colombia'], 
+    KM: 'Assembly_of_the_Union_of_the_Comoros',
+    CG: 'National_Assembly_(Republic_of_the_Congo)', //TODO senate exists but doesn't list members
+    CK: 'Parliament_of_the_Cook_Islands',
+    CR: 'Legislative_Assembly_of_Costa_Rica',
+    HR: 'Croatian_Parliament',
+    CU: 'National_Assembly_of_People%27s_Power', //TODO throws error; groups = null
+    CW: 'Parliament_of_Curaçao',
+    CY: 'House_of_Representatives_(Cyprus)',
+    CZ: ['Chamber_of_Deputies_of_the_Czech_Republic'], //TODO senate breaks the app entirely
+    CD: ['Senate_(Democratic_Republic_of_the_Congo)','National_Assembly_(Democratic_Republic_of_the_Congo)'], //TODO groups = null
+    DK: 'Folketing',
+    DJ: 'National_Assembly_(Djibouti)', //TODO throws error; colors = null
+    DM: 'House_of_Assembly_of_Dominica', //TODO subtitles don't show up because they're not bold
+    DO: ['Senate_of_the_Dominican_Republic','Chamber_of_Deputies_of_the_Dominican_Republic'], //TODO throws error; groups = null
+    EC: 'National_Assembly_(Ecuador)',
+    EG: ['Senate_(Egypt)','House_of_Representatives_(Egypt)'], //TODO throws error; groups = null
     SV: '',
     GQ: '',
     ER: '',
