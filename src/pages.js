@@ -22,7 +22,7 @@ let pages = {
     BB: ['Senate_of_Barbados', 'House_of_Assembly_of_Barbados'],
     BY: ['Council_of_the_Republic_(Belarus)', 'House_of_Representatives_(Belarus)'],
     BE: ['Senate_(Belgium)', 'Chamber_of_Representatives_(Belgium)'],
-    BZ: ['Senate_(Belize)', 'House_of_Representatives_(Belize)'], //TODO senate throws err; groups = null
+    BZ: ['Senate_(Belize)', 'House_of_Representatives_(Belize)'],
     BJ: 'National_Assembly_(Benin)',
     BM: ['Senate_of_Bermuda','House_of_Assembly_of_Bermuda'],
     BT: ['National_Council_(Bhutan)','National_Assembly_(Bhutan)'], //TODO 'non-partisan' appears as 'partisan'
@@ -54,35 +54,35 @@ let pages = {
     CK: 'Parliament_of_the_Cook_Islands',
     CR: 'Legislative_Assembly_of_Costa_Rica',
     HR: 'Croatian_Parliament',
-    CU: 'National_Assembly_of_People%27s_Power', //TODO throws error; groups = null
+    CU: 'National_Assembly_of_People%27s_Power',
     CW: 'Parliament_of_Curaçao',
     CY: 'House_of_Representatives_(Cyprus)',
     CZ: ['Chamber_of_Deputies_of_the_Czech_Republic'], //TODO senate breaks the app entirely
-    CD: ['Senate_(Democratic_Republic_of_the_Congo)','National_Assembly_(Democratic_Republic_of_the_Congo)'], //TODO groups = null
+    CD: ['Senate_(Democratic_Republic_of_the_Congo)','National_Assembly_(Democratic_Republic_of_the_Congo)'], //TODO some counts weirdness
     DK: 'Folketing',
     DJ: 'National_Assembly_(Djibouti)', //TODO throws error; colors = null
     DM: 'House_of_Assembly_of_Dominica', //TODO subtitles don't show up because they're not bold
-    DO: ['Senate_of_the_Dominican_Republic','Chamber_of_Deputies_of_the_Dominican_Republic'], //TODO throws error; groups = null
+    DO: ['Senate_of_the_Dominican_Republic','Chamber_of_Deputies_of_the_Dominican_Republic'], 
     EC: 'National_Assembly_(Ecuador)',
-    EG: ['Senate_(Egypt)','House_of_Representatives_(Egypt)'], //TODO throws error; groups = null
-    SV: '',
-    GQ: '',
-    ER: '',
-    EE: '',
-    ET: '',
-    FK: '',
-    FO: '',
-    FM: '',
-    FJ: '',
-    FI: '',
-    FR: '',
-    GF: '',
+    EG: ['Senate_(Egypt)','House_of_Representatives_(Egypt)'], 
+    SV: 'Legislative_Assembly_of_El_Salvador',
+    GQ: ['Senate_(Equatorial_Guinea)', 'Chamber_of_Deputies_(Equatorial_Guinea)'],
+    ER: 'National_Assembly_(Eritrea)',
+    EE: 'Riigikogu', //TODO misplaced subtitles
+    ET: 'House_of_Peoples%27_Representatives', //TODO throws error; counts = null - Senate without parties
+    FK: 'Legislative_Assembly_of_the_Falkland_Islands', //TODO throws error on slice
+    FO: 'Løgting',
+    FM: 'Congress_of_the_Federated_States_of_Micronesia', //unseen
+    FJ: 'Parliament_of_Fiji',
+    FI: 'Parliament_of_Finland', //TODO party without color
+    FR: ['Senate_(France)','National_Assembly_(France)'], //TODO extra text
+    GF: 'Assembly_of_French_Guiana', //TODO error on filter
     PF: '',
     TF: '',
     GA: '',
     GM: '',
     GE: '',
-    DE: '',
+    DE: 'Bundestag',
     GH: '',
     GI: '',
     GR: '',
@@ -179,7 +179,7 @@ let pages = {
     QA: '',
     RE: '',
     RO: '',
-    RU: '',
+    RU: ['Federation_Council_(Russia)', 'State_Duma'],
     RW: '',
     SH: '',
     KN: '',
