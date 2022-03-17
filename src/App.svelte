@@ -96,9 +96,9 @@
     result.push({group: title, color: 'title'})
 
     if(!groups){
-      console.log('No <ul> - Australia');
+      console.log('No <ul>');
       //--------------------------------------------
-      //      No <ul> - Australia
+      //      No <ul>
       //--------------------------------------------
       parsed = parsed.substring(parsed.indexOf('groups'));
       let subTmp = getSubtitles(parsed);
@@ -106,26 +106,30 @@
       let subtitleIndexes = subTmp[1];
 
       groups = parsed.match(/[a-zA-Z\d\s]+?(<\/a>)*\s\((<a.*?>)*\d*?\)(?!<\/b>)/gm);
-      let colors = parsed.match(/(?<=<span)(.*?)(?=<\/span>)/g);
-      console.log(colors);
-      colors = colors.join().match(/(?<=background-color:)(.*?)(?=;)/g);
-      // console.log(colors);
-      colors = colors.filter(function(x) {
-          return x !== 'transparent';
-      });
+      if(groups){
+        console.log('No <ul> - like Australia');
+        //--------------------------------------------
+        //      No <ul> - Australia
+        //--------------------------------------------
+        let colors = parsed.match(/(?<=<span)(.*?)(?=<\/span>)/g);
+        console.log(colors);
+        colors = colors.join().match(/(?<=background-color:)(.*?)(?=;)/g);
+        // console.log(colors);
+        colors = colors.filter(function(x) {
+            return x !== 'transparent';
+        });
 
-        
+        console.log('groups:',groups);
+        console.log('parsed:',parsed);
+        for(let i = 0; i < groups.length; i++){
 
-
-      for(let i = 0; i < groups.length; i++){
-
-        for(let j = 0; j < subtitles.length; j++){
-          if(subtitleIndexes[j] > -1){
-            if(parsed.indexOf(groups[i]) > subtitleIndexes[j]){
-              result.push({group: subtitles[j], color: 'subtitle'}); 
-              subtitleIndexes[j] = -1;
+          for(let j = 0; j < subtitles.length; j++){
+            if(subtitleIndexes[j] > -1){
+              if(parsed.indexOf(groups[i]) > subtitleIndexes[j]){
+                result.push({group: subtitles[j], color: 'subtitle'}); 
+                subtitleIndexes[j] = -1;
+              }
             }
-          }
         }
 
         groups[i] = groups[i].replace(/(<a.*?>)*/g, "");
@@ -134,6 +138,34 @@
         result.push({group: groups[i], color: colors[i]});
       }
       return result;
+      }
+      else{
+        console.log('No <ul> - like Cuba');
+        //--------------------------------------------
+        //      No <ul> - Cuba
+        //--------------------------------------------
+        groups = parsed.match(/(?<=>).*?(?=<\/a>)/gm);
+        let counts = parsed.match(/(?<=\().*?(?=\))/gm);
+
+        console.log('groups:', groups);
+        console.log('counts:', counts);
+        groups = groups.slice(0, counts.length);
+        let colors = parsed.match(/(?<=<span)(.*?)(?=<\/span>)/g);
+        console.log(colors);
+        colors = colors.join().match(/(?<=background-color:)(.*?)(?=;)/g);
+        // console.log(colors);
+        colors = colors.filter(function(x) {
+            return x !== 'transparent';
+        });
+        for(let i = 0; i < groups.length; i++){
+          groups[i] = groups[i].substring(groups[i].lastIndexOf('>')+1);
+          groups[i] = groups[i] + ' (' + counts[i] + ')'
+          result.push({group: groups[i], color: colors[i]});
+        }
+
+      return result;
+      }
+      
     }
     else {
 
